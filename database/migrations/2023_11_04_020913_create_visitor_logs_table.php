@@ -14,9 +14,8 @@ return new class () extends Migration {
             $table->id();
             $table->unsignedBigInteger('unit_id');
             $table->unsignedBigInteger('visitor_id');
-            $table->date('visit_date');
-            $table->time('arrival_time');
-            $table->time('departure_time')->nullable();
+            $table->dateTime('arrival_time');
+            $table->dateTime('departure_time')->nullable();
             $table->text('purpose');
             $table->enum('status', ['checked_in', 'checked_out']);
             $table->timestamps();

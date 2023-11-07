@@ -10,6 +10,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\VisitorLog;
 
 class VisitorLogsRelationManager extends RelationManager
 {
@@ -37,7 +38,6 @@ class VisitorLogsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('purpose'),
                 Tables\Columns\TextColumn::make('unit.name')
                     ->label('Unit'),
-                Tables\Columns\TextColumn::make('visit_date'),
                 Tables\Columns\TextColumn::make('arrival_time'),
                 Tables\Columns\TextColumn::make('departure_time'),
                 Tables\Columns\TextColumn::make('status')
@@ -58,8 +58,16 @@ class VisitorLogsRelationManager extends RelationManager
                     }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('Checked Out')
+                    ->requiresConfirmation()
+                    ->color('danger')
+                    ->icon('heroicon-m-archive-box-x-mark')
+                    ->hidden(fn (VisitorLog $visitorLog) => $visitorLog->status == 'checked_out')
+                    ->action(function (VisitorLog $visitorLog): void {
+                        $visitorLog->departure_time = now()->format('H:i:s');
+                        $visitorLog->status = 'checked_out';
+                        $visitorLog->update();
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

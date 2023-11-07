@@ -14,6 +14,7 @@ use FontLib\Table\Type\name;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Infolists\Infolist;
 use Filament\Infolists\Components;
+use App\Filament\Resources\AnnouncementResource\Widgets;
 
 class AnnouncementResource extends Resource
 {
@@ -101,6 +102,13 @@ class AnnouncementResource extends Resource
             'create' => Pages\CreateAnnouncement::route('/create'),
             'view' => Pages\ViewAnnouncement::route('/{record}'),
             'edit' => Pages\EditAnnouncement::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            Widgets\AnnouncementOverview::class,
         ];
     }
 }

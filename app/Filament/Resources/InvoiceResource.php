@@ -111,8 +111,8 @@ class InvoiceResource extends Resource
                     false: fn (Builder $query) => $query->where('status', 'available'),
                 )])
             ->actions([
-                Tables\Actions\EditAction::make()
-                    ->hidden(Auth::user()->hasRole('resident')),
+                Tables\Actions\EditAction::make(),
+                    // ->hidden(Auth::user()->hasRole('resident')),
                 Tables\Actions\Action::make('download')
                     ->link()
                     ->action(function (Invoice $invoice) {
@@ -146,9 +146,16 @@ class InvoiceResource extends Resource
 
                         return response()->streamDownload(function () use ($ldInvoice) {
                             echo $ldInvoice->stream();
-                        }, 'test.pdf');
+                        }, 'invoice.pdf');
                     }),
-            ])
+                    Tables\Actions\Action::make('pay')
+                        ->action(fn (Invoice $record) => $record->update(['status' => 'paid']))
+                        ->requiresConfirmation()
+                        ->modalHeading('Pay invoice')
+                        ->modalDescription('Are you sure you\'d like to pay this invoice?')
+                        ->modalSubmitActionLabel('Yes, pay it')
+                        ->hidden(fn (Invoice $invoice) => $invoice->status == 'paid')
+                        ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     // Tables\Actions\DeleteBulkAction::make(),
@@ -156,7 +163,7 @@ class InvoiceResource extends Resource
             ])
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make()
-                    ->hidden(Auth::user()->hasRole('resident')),
+                    // ->hidden(Auth::user()->hasRole('resident')),
             ]);
     }
 

@@ -21,7 +21,7 @@ class ListInvoices extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-                ->hidden(Auth::user()->hasRole('resident')),
+                // ->hidden(Auth::user()->hasRole('resident')),
         ];
     }
 

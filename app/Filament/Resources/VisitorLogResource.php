@@ -17,7 +17,7 @@ class VisitorLogResource extends Resource
 {
     protected static ?string $model = VisitorLog::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-arrow-left-on-rectangle';
 
     protected static ?string $navigationGroup = 'Visitor';
 
@@ -53,9 +53,6 @@ class VisitorLogResource extends Resource
                 Tables\Columns\TextColumn::make('unit.name')
                     ->label('Unit')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('visit_date')
-                    ->sortable()
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('arrival_time')
                     ->sortable()
                     ->searchable(),
@@ -75,7 +72,7 @@ class VisitorLogResource extends Resource
                     ->requiresConfirmation()
                     ->color('danger')
                     ->icon('heroicon-m-archive-box-x-mark')
-                    ->disabled(fn (VisitorLog $visitorLog) => $visitorLog->status == 'checked_out')
+                    ->hidden(fn (VisitorLog $visitorLog) => $visitorLog->status == 'checked_out')
                     ->action(function (VisitorLog $visitorLog): void {
                         $visitorLog->departure_time = now()->format('H:i:s');
                         $visitorLog->status = 'checked_out';

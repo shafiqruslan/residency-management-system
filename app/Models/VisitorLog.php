@@ -9,7 +9,7 @@ class VisitorLog extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['unit_id','visitor_id','visit_date','arrival_time','departure_time','purpose','status'];
+    protected $fillable = ['unit_id','visitor_id','arrival_time','departure_time','purpose','status'];
 
     public function visitor()
     {
